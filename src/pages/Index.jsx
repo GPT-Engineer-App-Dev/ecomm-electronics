@@ -1,4 +1,5 @@
-import { Box, Container, Flex, Heading, HStack, Image, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, HStack, Image, SimpleGrid, Text, VStack, Input } from "@chakra-ui/react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const products = [
@@ -26,6 +27,16 @@ const products = [
 ];
 
 const Index = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <Container maxW="container.xl" p={0}>
       <Flex as="nav" bg="blue.500" color="white" p={4} justifyContent="space-between" alignItems="center">
@@ -41,11 +52,16 @@ const Index = () => {
         <VStack spacing={8} mb={8}>
           <Heading>Welcome to ElectroShop</Heading>
           <Text fontSize="lg">Your one-stop shop for the latest electronics.</Text>
+          <Input
+            placeholder="Search for products..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
         </VStack>
 
         <Heading size="md" mb={4}>Featured Products</Heading>
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10}>
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <Box key={product.id} borderWidth="1px" borderRadius="lg" overflow="hidden">
               <Image src={product.image} alt={product.name} />
               <Box p={4}>
